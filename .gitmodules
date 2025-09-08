@@ -1,0 +1,6 @@
+[submodule "libraries/RockBLOCK-9704"]
+	path = libraries/RockBLOCK-9704
+	url = https://github.com/rock7/RockBLOCK-9704.git
+[submodule "libraries/SparkFun_u-blox_GNSS_v3"]
+	path = libraries/SparkFun_u-blox_GNSS_v3
+	url = https://github.com/sparkfun/SparkFun_u-blox_GNSS_v3.git
