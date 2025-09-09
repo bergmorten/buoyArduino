@@ -1,5 +1,6 @@
 
 #include <rockblock_9704.h>
+#define rockBlockSerial Serial1 // Use Serial1 to connect to the GNSS module. Change this if required
 const long rockBlockInterval = 1000;  // 1 second
 static unsigned long lastRockBlockTime = 0;
 bool ended = false;
@@ -8,7 +9,7 @@ int oldSignal;
 
 
 bool setupRockBlock() {
-  Serial1.begin(230400);
+  rockBlockSerial.begin(230400);
   delay(1000);
   if(rbBegin("Serial1"))
   {

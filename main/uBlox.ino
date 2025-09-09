@@ -1,25 +1,24 @@
-#include <Wire.h>  //Needed for I2C to GNSS
 
 #define MAX_PAYLOAD_SIZE 384  // Override MAX_PAYLOAD_SIZE for getModuleInfo which can return up to 348 bytes
-
 #include <SparkFun_u-blox_GNSS_v3.h>
+#define ubloxSerial Serial2 // Use Serial2 to connect to the GNSS module. Change this if required
 
 SFE_UBLOX_GNSS myGNSS;
-long lastUbloxTime = 0;          //Simple local timer. Limits amount if I2C traffic to u-blox module.
+long lastUbloxTime = 0;          //Simple local timer. Limits amount traffic to u-blox module.
 const long uBloxInterval = 100;  // 1000ms
 
 bool setupUblox() {
   Serial.println("Starting u-blox");
+  ubloxSerial.begin(38400); // u-blox modules default to 38400 baud. Change this if required
 
-  Wire.begin();
 
-  if (myGNSS.begin() == false)  //Connect to the u-blox module using Wire port
+  if (myGNSS.begin(ubloxSerial) == false)  //Connect to the u-blox module using Wire port
   {
-    Serial.println(F("u-blox GNSS not detected at default I2C address. Please check wiring...."));
+    Serial.println(F("u-blox GNSS not detected at default UART address. Please check wiring...."));
     return false;
   }
 
-  myGNSS.setI2COutput(COM_TYPE_UBX);                  //Set the I2C port to output UBX only (turn off NMEA noise)
+  myGNSS.setUART1Output(COM_TYPE_UBX);                  //Set the UART  port to output UBX only (turn off NMEA noise)
   myGNSS.saveConfigSelective(VAL_CFG_SUBSEC_IOPORT);  //Save (only) the communications port settings to flash and BBR
   Serial.println("LED is ready");
   return true;
@@ -28,7 +27,7 @@ bool setupUblox() {
 void uBloxLoop() {
 
     if (!isInitilized) return; // Global parameter
-  //Query module only every second. Doing it more often will just cause I2C traffic.
+
   //The module only responds when a new position is available
   if (millis() - lastUbloxTime > uBloxInterval) {
     lastUbloxTime = millis();  //Update the timer

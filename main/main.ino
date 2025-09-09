@@ -3,7 +3,6 @@
 static bool isWorking = true;
 const long sleepTime = 5000;  // 5s
 static bool isInitilized = false;
-
 // the setup function runs once when you press reset or power the board
 void setup() {
 
